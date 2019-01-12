@@ -10,9 +10,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "express": "^4.16.4",
-    "openzeppelin-solidity": "^2.0.0",
+    "node-server-screenshot": "^0.2.1",
+    "openzeppelin-solidity": "^2.1.1",
     "serve-static": "^1.13.2",
-    "truffle-hdwallet-provider": "^1.0.1"
+    "truffle-hdwallet-provider": "^1.0.2"
   }
 }

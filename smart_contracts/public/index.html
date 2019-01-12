@@ -10,15 +10,62 @@
   <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
 
   <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+
+
+  <style>
+
+  body,
+  html {
+    height: 100%;
+    margin: 0;
+    font: 400 15px/1.8 'Lato', sans-serif;
+  }
+
+  .screenBackground {
+    position: relative;
+    opacity: 1;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url('images/background3.jpeg');
+    height: 100%;
+  }
+
+  #screen {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    color: #000;
+  }
+
+  h1, h2 {
+    color: #fff !important;
+    text-shadow: 1px 1px #000;
+  }
+
+  h2 {
+    margin-bottom: 15px !important;
+  }
+
+  article.media {
+    background: #fff;
+border-radius: 4px;
+padding: 10px;
+  }
+
+  </style>
 </head>
 
 <body>
 
+  <div class="screenBackground"></div>
   <!-- Add a Star -->
 
 
 
-  <section class="section">
+  <section class="section" id="screen">
 
     <div class="container">
       <div class="column">
@@ -35,7 +82,7 @@
             <p class="control has-icons-left">
               <input class="input" type="text" placeholder="Star Name" id="star-name" />
               <span class="icon is-small is-left">
-                <i class="fas fa-lock"></i>
+                <i class="fas fa-star"></i>
               </span>
             </p>
           </div>
@@ -46,7 +93,7 @@
             <p class="control has-icons-left">
               <input class="input" type="text" placeholder="Star Story" id="star-story" />
               <span class="icon is-small is-left">
-                <i class="fas fa-lock"></i>
+                <i class="fas fa-signature"></i>
               </span>
             </p>
           </div>
@@ -61,7 +108,7 @@
               <p class="control has-icons-left">
                 <input class="input" type="text" placeholder="Star RA" id="star-ra" />
                 <span class="icon is-small is-left">
-                  <i class="fas fa-lock"></i>
+                  <i class="fas fa-map-marked-alt"></i>
                 </span>
               </p>
             </div>
@@ -72,7 +119,7 @@
               <p class="control has-icons-left">
                 <input class="input" type="text" placeholder="Star DEC" id="star-dec" />
                 <span class="icon is-small is-left">
-                  <i class="fas fa-lock"></i>
+                  <i class="fas fa-map-marked-alt"></i>
                 </span>
               </p>
             </div>
@@ -82,7 +129,7 @@
               <p class="control has-icons-left">
                 <input class="input" type="text" placeholder="Star MAG" id="star-mag" />
                 <span class="icon is-small is-left">
-                  <i class="fas fa-lock"></i>
+                  <i class="fas fa-map-marked-alt"></i>
                 </span>
               </p>
             </div>
@@ -122,7 +169,7 @@
               <p class="control has-icons-left">
                 <input class="input" type="text" placeholder="Place your Token" id="star-token" />
                 <span class="icon is-small is-left">
-                  <i class="fas fa-lock"></i>
+                  <i class="fas fa-fingerprint"></i>
                 </span>
               </p>
 
@@ -800,7 +847,18 @@ var starNotary = StarNotary.at('0xF7c71e77b4E0670019D4e4C89Be877428A25489d');
 // Enable claim button being clicked
 
 // Star copyright: https://d1jqu7g1y74ds1.cloudfront.net/wp-content/uploads/2010/08/The-Brightest-of-Stars.jpg
-const star = 'images/star.jpg';
+const starImage = 'images/star.jpg';
+
+let name, particularSection;
+
+let basicTemplateCard = (starImage, name, particularSection) =>
+  '<article class="media"><figure class="media-left"><p class="image is-64x64"><img src="' +
+  starImage +
+  '"></p></figure><div class="media-content"><div class="content"><p><strong>' +
+  name +
+  '</strong> <small>@johnsmith</small> <small>31m</small>' +
+  particularSection +
+  '</p></div><div></article>';
 
 function claimButtonClicked() {
   web3.eth.getAccounts(function(error, accounts) {
@@ -810,7 +868,7 @@ function claimButtonClicked() {
     }
 
     var account = accounts[0];
-    const name = document.querySelector('#star-name').value;
+    name = document.querySelector('#star-name').value;
     const story = document.querySelector('#star-story').value;
     const ra = document.querySelector('#star-ra').value;
     const dec = document.querySelector('#star-dec').value;
@@ -823,23 +881,20 @@ function claimButtonClicked() {
       document.querySelector('#star-answer').innerHTML =
         '<b>Loading...</b> Please wait...!';
 
-      if (!error) {
-        document.querySelector('#star-answer').innerHTML =
-          '<article class="media"><figure class="media-left"><p class="image is-64x64"><img src="' +
-          star +
-          '"></p></figure><div class="media-content"><div class="content"><p><strong>' +
-          name +
-          '</strong> <small>@johnsmith</small> <small>31m</small><br>Great!</b>Check your transaction here <a href="https://rinkeby.etherscan.io/tx/' +
-          result +
-          '">' +
-          result +
-          '</a></p></div><div></article>';
+      shortTx = result.substring(0, 4);
 
-        '<b>Great!</b> Check your transaction here <a href="https://rinkeby.etherscan.io/tx/' +
+      if (!error) {
+        particularSection =
+          '<br>Great! </b>Check your transaction here <a href="https://rinkeby.etherscan.io/tx/' +
           result +
           '">' +
-          result +
+          shortTx +
           '</a>';
+        document.querySelector('#star-answer').innerHTML = basicTemplateCard(
+          starImage,
+          name,
+          particularSection
+        );
 
         var starClaimedEvent = starNotary.Transfer({ from: account });
         starClaimedEvent.watch(function(error, result) {
@@ -870,6 +925,26 @@ function checkStarByTx() {
       alert('Token should be something...!');
       return;
     }
+    if (!tokenId.match(/^[0-9]*$/gm)) {
+      alert('Token should be a number...!');
+      return;
+    }
+
+    // We pass the image
+
+    var url = '/star';
+    var data = { tokenId };
+
+    fetch(url, {
+      method: 'POST', // or 'PUT'
+      body: JSON.stringify(data), // data can be `string` or {object}!
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(res => res.json())
+      .then(response => console.log('Success:', JSON.stringify(response)))
+      .catch(error => console.error('Error:', error));
 
     document.querySelector('#star-show').innerHTML =
       '<b>Loading...</b> Please wait...!';
@@ -881,18 +956,16 @@ function checkStarByTx() {
             '<b>Please, provide a valid token</b>';
           return;
         }
-        let starResponse =
-          '<div class="card"> <div class="card-image"> <figure class="image is-4by3"> <img src="/' +
-          star +
-          '" alt="' +
-          result[0] +
-          '"> </figure> </div> <div class="card-content"> <div class="media"> <div class="media-left"> <figure class="image is-48x48"> <img src="' +
-          star +
-          '" alt="' +
-          result[0] +
-          '"> </figure> </div> <div class="media-content"> <p class="title is-4">' +
-          result[0] +
-          '</p> <p class="subtitle is-6">@johnsmith</p> </div> </div> <div class="content"> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris. <a>@bulmaio</a>. <a href="#">#css</a> <a href="#">#responsive</a> <br> <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time> </div> </div> </div>';
+
+        console.log(result);
+
+        particularSection = '<br>...';
+
+        let starResponse = basicTemplateCard(
+          'images/' + tokenId + '.png',
+          result[0],
+          particularSection
+        );
 
         //console.log(starResponse);
         document.querySelector('#star-show').innerHTML = starResponse;
@@ -901,20 +974,6 @@ function checkStarByTx() {
       }
     });
   });
-
-  /*
-    
-    '<b>Name:</b> ' +
-    result[0] +
-    '<br /><b>Story:</b> ' +
-    result[1] +
-    '<br /><b>Coordinates</b><br /><b>RA:</b> ' +
-    result[2] +
-    '<br /><b>DEC:</b> ' +
-    result[3] +
-    '<br /><b>MAG:</b> ' +
-    result[4];
-    */
 }
 </script>
 </body>
