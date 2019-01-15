@@ -57,28 +57,17 @@
     padding: 10px;
   }
 
+  .image img {
+    min-height: 100%;
+  }
+
   </style>
 </head>
 
 <body>
 
   <div class="modal">
-    <div class="modal-background"></div>
 
-
-
-    <div class="modal-card">
-      <header class="modal-card-head">
-        <p class="modal-card-title">Warning!</p>
-        <button class="delete close" aria-label="close"></button>
-      </header>
-      <section class="modal-card-body">
-        Please, login into your MetaMask account.
-      </section>
-      <footer class="modal-card-foot">
-        <button class="button close">OK</button>
-      </footer>
-    </div>
 
 
 
@@ -245,9 +234,12 @@ web3.eth.getAccounts(function(error, accounts) {
 //console.log(web3.eth.defaultAccount);
 
 const noAccModal = document.querySelector('body > .modal');
+const noMetamaskAcCtemplate =
+  '<div class="modal-background"></div><div class="modal-card"> <header class="modal-card-head"> <p class="modal-card-title">Warning!</p> <button class="delete close" aria-label="close"></button> </header> <section class="modal-card-body"> Please, login into your MetaMask account. </section> <footer class="modal-card-foot"> <button class="button close">OK</button> </footer> </div>';
 
 if (!web3.eth.defaultAccount) {
   // We dont care about IE9
+  modalContent(noMetamaskAcCtemplate);
   noAccModal.classList.add('is-active');
 }
 
@@ -261,6 +253,10 @@ function closeModal() {
   noAccModal.classList.remove('is-active');
 }
 
+function modalContent(type) {
+  document.querySelector('.modal').innerHTML = type;
+}
+
 // The interface definition for your smart contract (the ABI)
 // build/contracts/StarNotary.json > abi property
 var StarNotary = web3.eth.contract(ABI);
@@ -271,23 +267,16 @@ var starNotary = StarNotary.at('0xF7c71e77b4E0670019D4e4C89Be877428A25489d');
 // Enable claim button being clicked
 
 // Star copyright: https://d1jqu7g1y74ds1.cloudfront.net/wp-content/uploads/2010/08/The-Brightest-of-Stars.jpg
-const starImage = 'images/star.jpg';
+const starImage = 'images/starIcon.png';
+const radar = 'images/radar.gif'; // For loading
 
 let name, particularSection;
 
-let basicTemplateCard = (
-  starImageClass,
-  starImage,
-  loadImg,
-  name,
-  particularSection
-) =>
-  '<article class="media"><figure class="media-left"><p class="image is-64x64"><img class="' +
-  starImageClass +
-  '" src="' +
+let basicTemplateCard = (starImageClass, starImage, name, particularSection) =>
+  '<article class="media"><figure class="media-left"><p class="image is-64x64"><img src="' +
   starImage +
-  '" onerror="' +
-  loadImg +
+  '" class="' +
+  starImageClass +
   '" ></p></figure><div class="media-content"><div class="content"><p><strong>' +
   name +
   '</strong> <small>@johnsmith</small> <small>31m</small>' +
@@ -327,7 +316,6 @@ function claimButtonClicked() {
         document.querySelector('#star-answer').innerHTML = basicTemplateCard(
           'register',
           starImage,
-          '',
           name,
           particularSection
         );
@@ -379,7 +367,15 @@ function checkStarByTx() {
       }
     })
       .then(res => res.json())
-      .then(response => console.log('Success:', JSON.stringify(response)))
+      .then(response => {
+        // It should retrieve something like: {"imagePath":"public/images/2.png"}
+        //alert(JSON.stringify(response));
+        document.querySelector('.retrieve').src = response.imagePath;
+        document.querySelector('.retrieve').onclick = function() {
+          console.log('For the moment log');
+        };
+      })
+      //.then(response => console.log('Success:', JSON.stringify(response)))
       .catch(error => console.error('Error:', error));
 
     document.querySelector('#star-show').innerHTML =
@@ -397,30 +393,11 @@ function checkStarByTx() {
 
         particularSection = '<br>...';
 
-        let yourStarImage = 'images/' + tokenId + '.png';
-
-        /*
-        if (document.querySelector('.retrieve').onload ) {
-          console.log('DONEEEEEEEEEEEEEEEEE');
-        } else {
-          console.log('NOPESSSSSSSSSSS');
-        }
-*/
-        function loadImg() {
-          console.log(1);
-          var img = new Image();
-          img.onload = function() {
-            //alert('Height: ' + this.height);
-            console.log(111111);
-            console.log(yourStarImage);
-          };
-          img.src = yourStarImage;
-        }
+        const yourStarImage = 'images/' + tokenId + '.png';
 
         let starResponse = basicTemplateCard(
           'retrieve',
-          yourStarImage,
-          loadImg(),
+          radar,
           result[0],
           particularSection
         );

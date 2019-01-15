@@ -12,7 +12,7 @@ app.use(
 );
 app.use(bodyParser.json());
 
-app.post('/star', function(req, res) {
+app.post('/star', async function(req, res) {
   if (req.get('host') !== '127.0.0.1:3000') {
     res.send({ status: 'domain error' });
     return;
@@ -22,17 +22,20 @@ app.post('/star', function(req, res) {
   // And check: https://www.npmjs.com/package/express-session
   // We dont want to store all the images
   // User closes tab, closes session and deletes image
-  var skyUrl =
+  const skyUrl =
     'http://server1.sky-map.org/skywindow?ra=1%2003%2033.35&de=-49%2031%2038.1&zoom=10&show_box=1';
+
+  const imagePath = 'images/' + req.body.tokenId + '.png';
   nodeServerSS.fromURL(
     skyUrl,
-    'public/images/' + req.body.tokenId + '.png',
-    function() {
+    'public/' + imagePath,
+    await function() {
       // done!
+      res.send({ imagePath });
     }
   );
 
-  res.send({ status: 'great!' });
+  //res.send({ status: 'great!' });
 });
 
 app.use(serveStatic('public', { index: ['index.html'] }));
