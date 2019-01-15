@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="en" style="background: #f2f2f2">
+<html lang="en" style="background: #213744">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,6 +8,8 @@
   <link rel="stylesheet" type="text/css" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
   <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+
+  <script src="/ABI.js"></script>
 
   <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 
@@ -51,8 +53,8 @@
 
   article.media {
     background: #fff;
-border-radius: 4px;
-padding: 10px;
+    border-radius: 4px;
+    padding: 10px;
   }
 
   </style>
@@ -60,10 +62,30 @@ padding: 10px;
 
 <body>
 
+  <div class="modal">
+    <div class="modal-background"></div>
+
+
+
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Warning!</p>
+        <button class="delete close" aria-label="close"></button>
+      </header>
+      <section class="modal-card-body">
+        Please, login into your MetaMask account.
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button close">OK</button>
+      </footer>
+    </div>
+
+
+
+  </div>
+
   <div class="screenBackground"></div>
   <!-- Add a Star -->
-
-
 
   <section class="section" id="screen">
 
@@ -220,626 +242,28 @@ padding: 10px;
 web3.eth.getAccounts(function(error, accounts) {
   web3.eth.defaultAccount = web3.eth.accounts[0];
 });
-console.log(web3.eth.defaultAccount);
-//web3.eth.getAccounts().then(e => console.log(e));
+//console.log(web3.eth.defaultAccount);
+
+const noAccModal = document.querySelector('body > .modal');
+
+if (!web3.eth.defaultAccount) {
+  // We dont care about IE9
+  noAccModal.classList.add('is-active');
+}
+
+const closeReferences = document.querySelectorAll('.close');
+
+closeReferences.forEach(function(elem) {
+  elem.addEventListener('click', closeModal);
+});
+
+function closeModal() {
+  noAccModal.classList.remove('is-active');
+}
 
 // The interface definition for your smart contract (the ABI)
 // build/contracts/StarNotary.json > abi property
-var StarNotary = web3.eth.contract([
-  {
-    constant: true,
-    inputs: [
-      {
-        name: 'interfaceId',
-        type: 'bytes4'
-      }
-    ],
-    name: 'supportsInterface',
-    outputs: [
-      {
-        name: '',
-        type: 'bool'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-    signature: '0x01ffc9a7'
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        name: '',
-        type: 'uint256'
-      }
-    ],
-    name: 'starsForSale',
-    outputs: [
-      {
-        name: '',
-        type: 'uint256'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-    signature: '0x0564b130'
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: 'tokenAt',
-    outputs: [
-      {
-        name: '',
-        type: 'uint256'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-    signature: '0x058df07b'
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: 'name',
-    outputs: [
-      {
-        name: '',
-        type: 'string'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-    signature: '0x06fdde03'
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        name: 'tokenId',
-        type: 'uint256'
-      }
-    ],
-    name: 'getApproved',
-    outputs: [
-      {
-        name: '',
-        type: 'address'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-    signature: '0x081812fc'
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: 'to',
-        type: 'address'
-      },
-      {
-        name: 'tokenId',
-        type: 'uint256'
-      }
-    ],
-    name: 'approve',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-    signature: '0x095ea7b3'
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: 'from',
-        type: 'address'
-      },
-      {
-        name: 'to',
-        type: 'address'
-      },
-      {
-        name: 'tokenId',
-        type: 'uint256'
-      }
-    ],
-    name: 'transferFrom',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-    signature: '0x23b872dd'
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: 'from',
-        type: 'address'
-      },
-      {
-        name: 'to',
-        type: 'address'
-      },
-      {
-        name: 'tokenId',
-        type: 'uint256'
-      }
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-    signature: '0x42842e0e'
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        name: 'tokenId',
-        type: 'uint256'
-      }
-    ],
-    name: 'ownerOf',
-    outputs: [
-      {
-        name: '',
-        type: 'address'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-    signature: '0x6352211e'
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        name: 'owner',
-        type: 'address'
-      }
-    ],
-    name: 'balanceOf',
-    outputs: [
-      {
-        name: '',
-        type: 'uint256'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-    signature: '0x70a08231'
-  },
-  {
-    constant: true,
-    inputs: [],
-    name: 'symbol',
-    outputs: [
-      {
-        name: '',
-        type: 'string'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-    signature: '0x95d89b41'
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: 'to',
-        type: 'address'
-      },
-      {
-        name: 'approved',
-        type: 'bool'
-      }
-    ],
-    name: 'setApprovalForAll',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-    signature: '0xa22cb465'
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        name: '',
-        type: 'bytes32'
-      }
-    ],
-    name: 'unique',
-    outputs: [
-      {
-        name: '',
-        type: 'bool'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-    signature: '0xa98d03b2'
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: 'from',
-        type: 'address'
-      },
-      {
-        name: 'to',
-        type: 'address'
-      },
-      {
-        name: 'tokenId',
-        type: 'uint256'
-      },
-      {
-        name: '_data',
-        type: 'bytes'
-      }
-    ],
-    name: 'safeTransferFrom',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-    signature: '0xb88d4fde'
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        name: 'tokenId',
-        type: 'uint256'
-      }
-    ],
-    name: 'tokenURI',
-    outputs: [
-      {
-        name: '',
-        type: 'string'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-    signature: '0xc87b56dd'
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        name: 'owner',
-        type: 'address'
-      },
-      {
-        name: 'operator',
-        type: 'address'
-      }
-    ],
-    name: 'isApprovedForAll',
-    outputs: [
-      {
-        name: '',
-        type: 'bool'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-    signature: '0xe985e9c5'
-  },
-  {
-    inputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'constructor',
-    signature: 'constructor'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        name: 'from',
-        type: 'address'
-      },
-      {
-        indexed: true,
-        name: 'to',
-        type: 'address'
-      },
-      {
-        indexed: true,
-        name: 'tokenId',
-        type: 'uint256'
-      }
-    ],
-    name: 'Transfer',
-    type: 'event',
-    signature:
-      '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        name: 'owner',
-        type: 'address'
-      },
-      {
-        indexed: true,
-        name: 'approved',
-        type: 'address'
-      },
-      {
-        indexed: true,
-        name: 'tokenId',
-        type: 'uint256'
-      }
-    ],
-    name: 'Approval',
-    type: 'event',
-    signature:
-      '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925'
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        name: 'owner',
-        type: 'address'
-      },
-      {
-        indexed: true,
-        name: 'operator',
-        type: 'address'
-      },
-      {
-        indexed: false,
-        name: 'approved',
-        type: 'bool'
-      }
-    ],
-    name: 'ApprovalForAll',
-    type: 'event',
-    signature:
-      '0x17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c31'
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: 'starName',
-        type: 'string'
-      },
-      {
-        name: 'starStory',
-        type: 'string'
-      },
-      {
-        name: 'ra',
-        type: 'string'
-      },
-      {
-        name: 'dec',
-        type: 'string'
-      },
-      {
-        name: 'mag',
-        type: 'string'
-      }
-    ],
-    name: 'createStar',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-    signature: '0x5f3ff33c'
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        name: 'tokenId',
-        type: 'uint256'
-      }
-    ],
-    name: 'tokenIdToStarInfo',
-    outputs: [
-      {
-        name: '',
-        type: 'string'
-      },
-      {
-        name: '',
-        type: 'string'
-      },
-      {
-        name: '',
-        type: 'string'
-      },
-      {
-        name: '',
-        type: 'string'
-      },
-      {
-        name: '',
-        type: 'string'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-    signature: '0x1967fd98'
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        name: 'coordinates',
-        type: 'bytes32'
-      }
-    ],
-    name: 'checkIfStarExist',
-    outputs: [
-      {
-        name: '',
-        type: 'bool'
-      }
-    ],
-    payable: false,
-    stateMutability: 'view',
-    type: 'function',
-    signature: '0x253d6390'
-  },
-  {
-    constant: true,
-    inputs: [
-      {
-        name: 'ra',
-        type: 'string'
-      },
-      {
-        name: 'dec',
-        type: 'string'
-      },
-      {
-        name: 'mag',
-        type: 'string'
-      }
-    ],
-    name: 'coordinatesToHash',
-    outputs: [
-      {
-        name: '',
-        type: 'bytes32'
-      }
-    ],
-    payable: false,
-    stateMutability: 'pure',
-    type: 'function',
-    signature: '0xa2d1d2d1'
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: 'tokenId',
-        type: 'uint256'
-      },
-      {
-        name: 'price',
-        type: 'uint256'
-      }
-    ],
-    name: 'putStarUpForSale',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-    signature: '0x316a4361'
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: 'tokenId',
-        type: 'uint256'
-      }
-    ],
-    name: 'buyStar',
-    outputs: [],
-    payable: true,
-    stateMutability: 'payable',
-    type: 'function',
-    signature: '0x2f1c34ef'
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: 'tokenId',
-        type: 'uint256'
-      }
-    ],
-    name: 'mint',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-    signature: '0xa0712d68'
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: 'starOwner',
-        type: 'address'
-      },
-      {
-        name: 'to',
-        type: 'address'
-      },
-      {
-        name: 'tokenId',
-        type: 'uint256'
-      }
-    ],
-    name: 'transferStar',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-    signature: '0x37706d0c'
-  },
-  {
-    constant: false,
-    inputs: [
-      {
-        name: 'user1',
-        type: 'address'
-      },
-      {
-        name: 'user1TokenId',
-        type: 'uint256'
-      },
-      {
-        name: 'user2',
-        type: 'address'
-      },
-      {
-        name: 'user2TokenId',
-        type: 'uint256'
-      }
-    ],
-    name: 'exchangeStars',
-    outputs: [],
-    payable: false,
-    stateMutability: 'nonpayable',
-    type: 'function',
-    signature: '0x40f5ec88'
-  }
-]);
+var StarNotary = web3.eth.contract(ABI);
 // Grab the contract at specified deployed address with the
 // interface defined by the ABI
 var starNotary = StarNotary.at('0xF7c71e77b4E0670019D4e4C89Be877428A25489d');
@@ -851,10 +275,20 @@ const starImage = 'images/star.jpg';
 
 let name, particularSection;
 
-let basicTemplateCard = (starImage, name, particularSection) =>
-  '<article class="media"><figure class="media-left"><p class="image is-64x64"><img src="' +
+let basicTemplateCard = (
+  starImageClass,
+  starImage,
+  loadImg,
+  name,
+  particularSection
+) =>
+  '<article class="media"><figure class="media-left"><p class="image is-64x64"><img class="' +
+  starImageClass +
+  '" src="' +
   starImage +
-  '"></p></figure><div class="media-content"><div class="content"><p><strong>' +
+  '" onerror="' +
+  loadImg +
+  '" ></p></figure><div class="media-content"><div class="content"><p><strong>' +
   name +
   '</strong> <small>@johnsmith</small> <small>31m</small>' +
   particularSection +
@@ -891,7 +325,9 @@ function claimButtonClicked() {
           shortTx +
           '</a>';
         document.querySelector('#star-answer').innerHTML = basicTemplateCard(
+          'register',
           starImage,
+          '',
           name,
           particularSection
         );
@@ -961,8 +397,30 @@ function checkStarByTx() {
 
         particularSection = '<br>...';
 
+        let yourStarImage = 'images/' + tokenId + '.png';
+
+        /*
+        if (document.querySelector('.retrieve').onload ) {
+          console.log('DONEEEEEEEEEEEEEEEEE');
+        } else {
+          console.log('NOPESSSSSSSSSSS');
+        }
+*/
+        function loadImg() {
+          console.log(1);
+          var img = new Image();
+          img.onload = function() {
+            //alert('Height: ' + this.height);
+            console.log(111111);
+            console.log(yourStarImage);
+          };
+          img.src = yourStarImage;
+        }
+
         let starResponse = basicTemplateCard(
-          'images/' + tokenId + '.png',
+          'retrieve',
+          yourStarImage,
+          loadImg(),
           result[0],
           particularSection
         );
@@ -976,5 +434,6 @@ function checkStarByTx() {
   });
 }
 </script>
+
 </body>
 </html>
