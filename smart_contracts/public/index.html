@@ -42,6 +42,11 @@
     color: #000;
   }
 
+  .modal-background {
+    align-items: center;
+    display: flex;
+  }
+
   h1, h2 {
     color: #fff !important;
     text-shadow: 1px 1px #000;
@@ -59,6 +64,12 @@
 
   .image img {
     min-height: 100%;
+  }
+
+  .bigImage {
+    border: 4px solid white;
+    margin: 0 auto;
+    display: block;
   }
 
   </style>
@@ -231,42 +242,52 @@
 web3.eth.getAccounts(function(error, accounts) {
   web3.eth.defaultAccount = web3.eth.accounts[0];
 });
-//console.log(web3.eth.defaultAccount);
 
-const noAccModal = document.querySelector('body > .modal');
+const modalWindow = document.querySelector('body > .modal');
 const noMetamaskAcCtemplate =
   '<div class="modal-background"></div><div class="modal-card"> <header class="modal-card-head"> <p class="modal-card-title">Warning!</p> <button class="delete close" aria-label="close"></button> </header> <section class="modal-card-body"> Please, login into your MetaMask account. </section> <footer class="modal-card-foot"> <button class="button close">OK</button> </footer> </div>';
+let showFullImage = function(imagePath) {
+  return (
+    '<div class="modal-background"><img src="' +
+    imagePath +
+    '" class="bigImage"></div>'
+  );
+};
+
+console.log(showFullImage());
 
 if (!web3.eth.defaultAccount) {
   // We dont care about IE9
+  modalWindow.classList.add('is-active');
   modalContent(noMetamaskAcCtemplate);
-  noAccModal.classList.add('is-active');
+  eventsForClosing();
 }
 
-const closeReferences = document.querySelectorAll('.close');
-
-closeReferences.forEach(function(elem) {
-  elem.addEventListener('click', closeModal);
-});
+function eventsForClosing() {
+  document.querySelectorAll('.close').forEach(function(elem) {
+    elem.addEventListener('click', closeModal);
+  });
+}
 
 function closeModal() {
-  noAccModal.classList.remove('is-active');
+  modalWindow.classList.remove('is-active');
 }
 
-function modalContent(type) {
+function modalContent(type, imagePath) {
+  if (imagePath) {
+    console.log(type + imagePath);
+    console.log('hay imagen');
+    document.querySelector('.modal').innerHTML = type(imagePath);
+    return;
+  }
   document.querySelector('.modal').innerHTML = type;
 }
 
-// The interface definition for your smart contract (the ABI)
-// build/contracts/StarNotary.json > abi property
+// The interface definition for your smart contract (the ABI) >> build/contracts/StarNotary.json > abi property
 var StarNotary = web3.eth.contract(ABI);
-// Grab the contract at specified deployed address with the
-// interface defined by the ABI
+// Grab the contract at specified deployed address with the >> interface defined by the ABI
 var starNotary = StarNotary.at('0xF7c71e77b4E0670019D4e4C89Be877428A25489d');
 
-// Enable claim button being clicked
-
-// Star copyright: https://d1jqu7g1y74ds1.cloudfront.net/wp-content/uploads/2010/08/The-Brightest-of-Stars.jpg
 const starImage = 'images/starIcon.png';
 const radar = 'images/radar.gif'; // For loading
 
@@ -372,7 +393,9 @@ function checkStarByTx() {
         //alert(JSON.stringify(response));
         document.querySelector('.retrieve').src = response.imagePath;
         document.querySelector('.retrieve').onclick = function() {
-          console.log('For the moment log');
+          modalWindow.classList.add('is-active');
+          modalContent(showFullImage, response.imagePath);
+          eventsForClosing();
         };
       })
       //.then(response => console.log('Success:', JSON.stringify(response)))
