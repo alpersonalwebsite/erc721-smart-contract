@@ -29,6 +29,7 @@ app.post('/star', async function(req, res) {
   nodeServerSS.fromURL(
     skyUrl,
     'public/' + imagePath,
+    { clip: { x: 30, y: 30, width: 600, height: 400 } },
     await function() {
       // done!
       res.send({ imagePath });
