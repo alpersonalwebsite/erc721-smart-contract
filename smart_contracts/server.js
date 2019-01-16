@@ -24,8 +24,16 @@ app.post('/star', async function(req, res) {
   // User closes tab, closes session and deletes image
 
   // Configuration api http://server7.wikisky.org/api?
+  let ra = req.body.starInfo.ra.replace(/ /g, '%20');
+  let dec = req.body.starInfo.dec.replace(/ /g, '%20');
+
+  // Example: 'http://server1.sky-map.org/skywindow?ra=1%2003%2033.35&de=-49%2031%2038.1&zoom=10&show_box=1'
   const skyUrl =
-    'http://server1.sky-map.org/skywindow?ra=1%2003%2033.35&de=-49%2031%2038.1&zoom=10&show_box=1';
+    'http://server1.sky-map.org/skywindow?ra=' +
+    ra +
+    '&de=' +
+    dec +
+    '&zoom=10&show_box=1';
 
   const imagePath = 'images/' + req.body.starInfo.tokenId + '.png';
   nodeServerSS.fromURL(

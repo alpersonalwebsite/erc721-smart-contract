@@ -85,11 +85,8 @@
   #star-show .button {
     font-size: 10px;
   }
-  
-  .corrdinatesValidation {
-    background: #fff;
-    border-radius: 4px;
-    padding: 10px;
+
+  .corrdinatesValidationWrap {
     display: none;
   }
 
@@ -184,8 +181,15 @@
           </div>
         </div>
 
+        <div class="corrdinatesValidationWrap">
+          <article class="message is-danger">
+            <div class="message-body">
+              <div class="corrdinatesValidation">
 
-        <div class="corrdinatesValidation"></div>
+              </div>
+            </div>
+          </article>
+        </div>
 
 
         <div id="star-answer">
@@ -341,17 +345,18 @@ function claimButtonClicked() {
   // Verify ra/dec/mag just number
   let coordinatesArr = [];
   const errorNumberCoordinatesTemplate =
-    'can only be numbers (0 to 9), dot (.) or negative sign (-)';
+    'can only be numbers (0 to 9), dot (.) or negative sign (-) and spaces( ). <br />Examples: <br />RA 13h 03m 33.35sec should be 13 03 33.35 <br />Dec -49° 31’ 38.1” should be -49 31 38.1';
 
-  coordinatesArr.push(ra);
-  coordinatesArr.push(dec);
-  coordinatesArr.push(mag);
+  coordinatesArr = [ra, dec, mag];
 
-  const pattern = /[0-9.-]/g;
+  console.log(coordinatesArr);
+
+  const pattern = /[^0-9 .-]/g;
 
   let errorsCorrdinates = 0;
-  for (let element = 0; element < coordinatesArr.length; element++) {
-    if (pattern.test(coordinatesArr[element]) === false) {
+  for (let i = 0; i < coordinatesArr.length; i++) {
+    console.log('corriendo');
+    if (pattern.test(Number(coordinatesArr[i]))) {
       errorsCorrdinates++;
     }
   }
@@ -362,9 +367,17 @@ function claimButtonClicked() {
     ' errors.<br /> Please, check your coordinates and submit again. <br />Message: ra/dec/mag ' +
     errorNumberCoordinatesTemplate;
 
-  document.querySelector('.corrdinatesValidation').classList.add('show');
+  document.querySelector('.corrdinatesValidationWrap').classList.add('show');
 
-  return;
+  console.log(errorsCorrdinates);
+
+  if (errorsCorrdinates > 0) {
+    return;
+  } else {
+    document
+      .querySelector('.corrdinatesValidationWrap')
+      .classList.remove('show');
+  }
 
   web3.eth.getAccounts(function(error, accounts) {
     if (error) {
