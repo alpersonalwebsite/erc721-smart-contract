@@ -17,3 +17,6 @@ truffle-config-withCredentials.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# we dont want to commit the image files (0-9)
+public/images/[0-9]*

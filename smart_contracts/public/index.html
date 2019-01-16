@@ -70,6 +70,20 @@
     border: 4px solid white;
     margin: 0 auto;
     display: block;
+    max-width: 80%;
+  }
+
+  #star-show .content > p {
+    margin-bottom: 5px;
+  }
+  #star-show .buttons .button,
+  #star-show .content,
+  #star-show .buttons:not(:last-child) {
+    margin-bottom: 0;
+  }
+
+  #star-show .button {
+    font-size: 10px;
   }
 
   </style>
@@ -186,7 +200,7 @@
 
       <div class="container">
         <div class="columns">
-          <div class="column">
+          <div class="column is-4">
             <div class="field">
               <p class="control has-icons-left">
                 <input class="input" type="text" placeholder="Place your Token" id="star-token" />
@@ -208,29 +222,25 @@
           <div class="column">
           </div>
         </div>
-      </div>
 
 
-
-      <div class="container">
-        <div class="columns">
-          <div class="column">
-            <div class="field">
-              <div id="star-show"></div>
-            </div>
-          </div>
-          <div class="is-divider-vertical" data-content="AND"></div>
-          <div class="column">
-          </div>
-        </div>
+        <div id="star-show"></div>
       </div>
 
     </div>
 
-  </section>
 
-  <script>
-  if (typeof web3 !== 'undefined') {
+
+
+
+
+
+  </div>
+
+</section>
+
+<script>
+if (typeof web3 !== 'undefined') {
   web3 = new Web3(web3.currentProvider);
 } else {
   // set the provider you want from Web3.providers
@@ -244,17 +254,21 @@ web3.eth.getAccounts(function(error, accounts) {
 });
 
 const modalWindow = document.querySelector('body > .modal');
+
+// Modal template 1: no MetaMask
 const noMetamaskAcCtemplate =
   '<div class="modal-background"></div><div class="modal-card"> <header class="modal-card-head"> <p class="modal-card-title">Warning!</p> <button class="delete close" aria-label="close"></button> </header> <section class="modal-card-body"> Please, login into your MetaMask account. </section> <footer class="modal-card-foot"> <button class="button close">OK</button> </footer> </div>';
+
+// Modal template 2: zoom image
 let showFullImage = function(imagePath) {
   return (
     '<div class="modal-background"><img src="' +
     imagePath +
-    '" class="bigImage"></div>'
+    '" class="bigImage"></div><button class="modal-close is-large close" aria-label="close"></button>'
   );
 };
 
-console.log(showFullImage());
+//console.log(showFullImage());
 
 if (!web3.eth.defaultAccount) {
   // We dont care about IE9
@@ -275,8 +289,6 @@ function closeModal() {
 
 function modalContent(type, imagePath) {
   if (imagePath) {
-    console.log(type + imagePath);
-    console.log('hay imagen');
     document.querySelector('.modal').innerHTML = type(imagePath);
     return;
   }
@@ -300,7 +312,7 @@ let basicTemplateCard = (starImageClass, starImage, name, particularSection) =>
   starImageClass +
   '" ></p></figure><div class="media-content"><div class="content"><p><strong>' +
   name +
-  '</strong> <small>@johnsmith</small> <small>31m</small>' +
+  '</strong>' +
   particularSection +
   '</p></div><div></article>';
 
@@ -333,7 +345,7 @@ function claimButtonClicked() {
           result +
           '">' +
           shortTx +
-          '</a>';
+          '...</a>';
         document.querySelector('#star-answer').innerHTML = basicTemplateCard(
           'register',
           starImage,
@@ -414,7 +426,22 @@ function checkStarByTx() {
 
         console.log(result);
 
-        particularSection = '<br>...';
+        const secStarStory =
+          '<span style="display: block;"><span class="icon"><i class="fas fa-signature"></i></span>' +
+          result[1] +
+          '</span>';
+
+        const secStarInfo =
+          '<div class="buttons has-addons"> <span class="button">RA: ' +
+          result[2] +
+          '</span> <span class="button">DEC: ' +
+          result[3] +
+          '</span> <span class="button">RA: ' +
+          result[4] +
+          '</span> </div>';
+
+        particularSection = secStarStory;
+        particularSection += secStarInfo;
 
         const yourStarImage = 'images/' + tokenId + '.png';
 
