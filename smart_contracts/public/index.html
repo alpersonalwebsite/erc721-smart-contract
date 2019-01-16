@@ -85,6 +85,18 @@
   #star-show .button {
     font-size: 10px;
   }
+  
+  .corrdinatesValidation {
+    background: #fff;
+    border-radius: 4px;
+    padding: 10px;
+    display: none;
+  }
+
+  /* Ext helper to show */
+  .show {
+    display: block;
+  }
 
   </style>
 </head>
@@ -171,6 +183,9 @@
             </div>
           </div>
         </div>
+
+
+        <div class="corrdinatesValidation"></div>
 
 
         <div id="star-answer">
@@ -317,6 +332,40 @@ let basicTemplateCard = (starImageClass, starImage, name, particularSection) =>
   '</p></div><div></article>';
 
 function claimButtonClicked() {
+  name = document.querySelector('#star-name').value;
+  const story = document.querySelector('#star-story').value;
+  const ra = document.querySelector('#star-ra').value;
+  const dec = document.querySelector('#star-dec').value;
+  const mag = document.querySelector('#star-mag').value;
+
+  // Verify ra/dec/mag just number
+  let coordinatesArr = [];
+  const errorNumberCoordinatesTemplate =
+    'can only be numbers (0 to 9), dot (.) or negative sign (-)';
+
+  coordinatesArr.push(ra);
+  coordinatesArr.push(dec);
+  coordinatesArr.push(mag);
+
+  const pattern = /[0-9.-]/g;
+
+  let errorsCorrdinates = 0;
+  for (let element = 0; element < coordinatesArr.length; element++) {
+    if (pattern.test(coordinatesArr[element]) === false) {
+      errorsCorrdinates++;
+    }
+  }
+
+  document.querySelector('.corrdinatesValidation').innerHTML =
+    'You have ' +
+    errorsCorrdinates +
+    ' errors.<br /> Please, check your coordinates and submit again. <br />Message: ra/dec/mag ' +
+    errorNumberCoordinatesTemplate;
+
+  document.querySelector('.corrdinatesValidation').classList.add('show');
+
+  return;
+
   web3.eth.getAccounts(function(error, accounts) {
     if (error) {
       console.log(error);
@@ -324,11 +373,6 @@ function claimButtonClicked() {
     }
 
     const account = accounts[0];
-    name = document.querySelector('#star-name').value;
-    const story = document.querySelector('#star-story').value;
-    const ra = document.querySelector('#star-ra').value;
-    const dec = document.querySelector('#star-dec').value;
-    const mag = document.querySelector('#star-mag').value;
 
     starNotary.createStar.sendTransaction(name, story, ra, dec, mag, function(
       error,
@@ -387,7 +431,7 @@ function checkStarByTx() {
       return;
     }
 
-    // We pass the image and the current wiindow´s Size
+    // We pass thecurrent window´s size
     const windoWidth = Math.max(
       document.documentElement.clientWidth,
       window.innerWidth || 0
@@ -397,33 +441,7 @@ function checkStarByTx() {
       window.innerHeight || 0
     );
 
-    const url = '/star';
-    const data = { tokenId, userInfo: { windoWidth, windowHeight } };
-
-    fetch(url, {
-      method: 'POST', // or 'PUT'
-      body: JSON.stringify(data), // data can be `string` or {object}!
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => res.json())
-      .then(response => {
-        // It should retrieve something like: {"imagePath":"public/images/2.png"}
-        //alert(JSON.stringify(response));
-        document.querySelector('.retrieve').src = response.imagePath;
-        document.querySelector('.retrieve').onclick = function() {
-          modalWindow.classList.add('is-active');
-          modalContent(showFullImage, response.imagePath);
-          eventsForClosing();
-        };
-      })
-      //.then(response => console.log('Success:', JSON.stringify(response)))
-      .catch(error => console.error('Error:', error));
-
-    document.querySelector('#star-show').innerHTML =
-      '<b>Loading...</b> Please wait...!';
-
+    // We are also going to pass starInfo: tokenId, ra, dec, mag
     starNotary.tokenIdToStarInfo.call(tokenId, function(error, result) {
       if (!error) {
         if (!result[0]) {
@@ -433,6 +451,10 @@ function checkStarByTx() {
         }
 
         console.log(result);
+
+        const ra = result[2];
+        const dec = result[3];
+        const mag = result[4];
 
         const secStarStory =
           '<span style="display: block;"><span class="icon"><i class="fas fa-signature"></i></span>' +
@@ -444,7 +466,7 @@ function checkStarByTx() {
           result[2] +
           '</span> <span class="button">DEC: ' +
           result[3] +
-          '</span> <span class="button">RA: ' +
+          '</span> <span class="button">MAG: ' +
           result[4] +
           '</span> </div>';
 
@@ -460,12 +482,43 @@ function checkStarByTx() {
           particularSection
         );
 
-        //console.log(starResponse);
         document.querySelector('#star-show').innerHTML = starResponse;
+
+        const url = '/star';
+        const data = {
+          starInfo: { tokenId, ra, dec, mag },
+          userInfo: { windoWidth, windowHeight }
+        };
+
+        fetch(url, {
+          method: 'POST', // or 'PUT'
+          body: JSON.stringify(data), // data can be `string` or {object}!
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+          .then(res => res.json())
+          .then(response => {
+            // It should retrieve something like: {"imagePath":"public/images/2.png"}
+            //alert(JSON.stringify(response));
+            document.querySelector('.retrieve').src = response.imagePath;
+            document.querySelector('.retrieve').onclick = function() {
+              modalWindow.classList.add('is-active');
+              modalContent(showFullImage, response.imagePath);
+              eventsForClosing();
+            };
+          })
+          //.then(response => console.log('Success:', JSON.stringify(response)))
+          .catch(error => console.error('Error:', error));
       } else {
         console.log(error);
       }
     });
+
+    /*
+    document.querySelector('#star-show').innerHTML =
+    '<b>Loading...</b> Please wait...!';
+    */
   });
 }
 </script>

@@ -1,9 +1,9 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var serveStatic = require('serve-static');
-var nodeServerSS = require('node-server-screenshot');
+const express = require('express');
+const bodyParser = require('body-parser');
+const serveStatic = require('serve-static');
+const nodeServerSS = require('node-server-screenshot');
 
-var app = express();
+const app = express();
 
 app.use(
   bodyParser.urlencoded({
@@ -18,16 +18,16 @@ app.post('/star', async function(req, res) {
     return;
   }
 
-  console.log(req.body);
-
   // Replace maybe with PhantomJS and some npm package
   // And check: https://www.npmjs.com/package/express-session
   // We dont want to store all the images
   // User closes tab, closes session and deletes image
+
+  // Configuration api http://server7.wikisky.org/api?
   const skyUrl =
     'http://server1.sky-map.org/skywindow?ra=1%2003%2033.35&de=-49%2031%2038.1&zoom=10&show_box=1';
 
-  const imagePath = 'images/' + req.body.tokenId + '.png';
+  const imagePath = 'images/' + req.body.starInfo.tokenId + '.png';
   nodeServerSS.fromURL(
     skyUrl,
     'public/' + imagePath,
