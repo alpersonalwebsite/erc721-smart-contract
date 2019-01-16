@@ -296,9 +296,9 @@ function modalContent(type, imagePath) {
 }
 
 // The interface definition for your smart contract (the ABI) >> build/contracts/StarNotary.json > abi property
-var StarNotary = web3.eth.contract(ABI);
+const StarNotary = web3.eth.contract(ABI);
 // Grab the contract at specified deployed address with the >> interface defined by the ABI
-var starNotary = StarNotary.at('0xF7c71e77b4E0670019D4e4C89Be877428A25489d');
+const starNotary = StarNotary.at('0xF7c71e77b4E0670019D4e4C89Be877428A25489d');
 
 const starImage = 'images/starIcon.png';
 const radar = 'images/radar.gif'; // For loading
@@ -323,7 +323,7 @@ function claimButtonClicked() {
       return;
     }
 
-    var account = accounts[0];
+    const account = accounts[0];
     name = document.querySelector('#star-name').value;
     const story = document.querySelector('#star-story').value;
     const ra = document.querySelector('#star-ra').value;
@@ -353,7 +353,7 @@ function claimButtonClicked() {
           particularSection
         );
 
-        var starClaimedEvent = starNotary.Transfer({ from: account });
+        const starClaimedEvent = starNotary.Transfer({ from: account });
         starClaimedEvent.watch(function(error, result) {
           console.log(result);
           if (!error) {
@@ -376,7 +376,7 @@ function checkStarByTx() {
       console.log(error);
       return;
     }
-    var account = accounts[0];
+    const account = accounts[0];
     const tokenId = document.querySelector('#star-token').value;
     if (tokenId == '' || tokenId == ' ') {
       alert('Token should be something...!');
@@ -387,10 +387,18 @@ function checkStarByTx() {
       return;
     }
 
-    // We pass the image
+    // We pass the image and the current wiindow´s Size
+    const windoWidth = Math.max(
+      document.documentElement.clientWidth,
+      window.innerWidth || 0
+    );
+    const windowHeight = Math.max(
+      document.documentElement.clientHeight,
+      window.innerHeight || 0
+    );
 
-    var url = '/star';
-    var data = { tokenId };
+    const url = '/star';
+    const data = { tokenId, userInfo: { windoWidth, windowHeight } };
 
     fetch(url, {
       method: 'POST', // or 'PUT'

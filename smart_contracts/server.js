@@ -18,6 +18,8 @@ app.post('/star', async function(req, res) {
     return;
   }
 
+  console.log(req.body);
+
   // Replace maybe with PhantomJS and some npm package
   // And check: https://www.npmjs.com/package/express-session
   // We dont want to store all the images
@@ -29,7 +31,14 @@ app.post('/star', async function(req, res) {
   nodeServerSS.fromURL(
     skyUrl,
     'public/' + imagePath,
-    { clip: { x: 30, y: 30, width: 600, height: 400 } },
+    {
+      clip: {
+        x: 30,
+        y: 30,
+        width: req.body.userInfo.windoWidth,
+        height: req.body.userInfo.windowHeight
+      }
+    },
     await function() {
       // done!
       res.send({ imagePath });
