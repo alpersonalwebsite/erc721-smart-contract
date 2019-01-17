@@ -1,28 +1,17 @@
-# Project 5: Decentralized Star Notary
+# Decentralized Star Notary
 
-# Purpose
+# Objective
 
-Create and implement an ERC-720 contract with its proper UT and a basic UI to "Add" and "Retrieve" a "Digital Asset" (in this case, a Star).
+Create and implement an [ERC-721](http://erc721.org/) smart contract with its proper UT and a basic UI to "Register" (Add) and "Retrieve" a "Digital Asset" (in this case, a Star) by its "Token ID".
+
 The contract should cover the following functionality:
 
 * Creation
 * Existence
-* Token to Asset
+* Token to Asset (Star)
 * Transaction: Selling and Buying
 * Transferring
 * Exchanging
-
-# Notes
-
-For privacy I´m deleting...
-
-1. Personal configuration in `truffle-config.js` (infura link and seed)
-2. The artifact or build output `build/contracts/*` since some of those files explicitly expose my OS username
-
-   And excluding...
-
-3. node_modules/ I´m using openzeppelin-solidity so you can install the dependencies or check them in their repo.
-   Example for ERC-721: https://raw.githubusercontent.com/OpenZeppelin/openzeppelin-solidity/master/contracts/token/ERC721/ERC721.sol
 
 # Installation
 
@@ -32,9 +21,11 @@ cd smart_contracts
 npm install
 ```
 
+_Note:_ [electron](https://github.com/electron) will be downloaded and installed.
+
 ## Deploying locally
 
-1. Install truffle and ganache-cli globally
+1. Install `truffle` and `ganache-cli` globally
 
 ```
 npm install --global truffle ganache-cli
@@ -487,6 +478,8 @@ Output:
 node server
 ```
 
+Alternatively, for development, you can run: `nodemon server`
+
 Then go to http://127.0.0.1:3000/
 
 ### Check a Star by Token
@@ -535,6 +528,20 @@ I tried to exchange tokens through MetaMask, failing both times:
 * https://rinkeby.etherscan.io/tx/0x77663844eb161a66bac70594b14316469dad1c47e22019bf5670486c53df2ed9
 * https://rinkeby.etherscan.io/tx/0x7e9ad711950fc9635f4cb68e7745e7159702b55366d3d2c9819e7d732f4964a9
   However, since `MetaMask` can only process `transfers` for `ERC-720` contracts, I ended using `MyEtherWallet`: https://www.myetherwallet.com/#contracts
+
+## Author Notes
+
+For privacy...
+
+I´m deleting...
+
+1. Personal configuration in `truffle-config.js` (infura link and seed)
+2. The artifact or build output `build/contracts/*` since some of those files explicitly expose my OS username
+
+And excluding...
+
+3. `node_modules/` I´m using openzeppelin-solidity so you can install the dependencies or check them in their repo.
+   Example for ERC-721: https://raw.githubusercontent.com/OpenZeppelin/openzeppelin-solidity/master/contracts/token/ERC721/ERC721.sol
 
 ## Useful resources
 
