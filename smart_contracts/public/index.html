@@ -356,7 +356,7 @@ function claimButtonClicked() {
   let errorsCorrdinates = 0;
   for (let i = 0; i < coordinatesArr.length; i++) {
     console.log('corriendo');
-    if (pattern.test(Number(coordinatesArr[i]))) {
+    if (pattern.test(Number(coordinatesArr[i].replace(/[. ]/gi, '')))) {
       errorsCorrdinates++;
     }
   }
