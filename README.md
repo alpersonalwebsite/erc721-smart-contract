@@ -551,4 +551,5 @@ And excluding...
 
 ## Credits
 
-Background image: [Scenic View Of Rocky Mountain During Evening](https://www.pexels.com/photo/scenic-view-of-rocky-mountain-during-evening-1624438/) - By: Eberhard Grossgasteiger
+* Background image: [Scenic View Of Rocky Mountain During Evening](https://www.pexels.com/photo/scenic-view-of-rocky-mountain-during-evening-1624438/) - By: Eberhard Grossgasteiger
+* Sky-map > Site Linker: http://server7.wikisky.org/SiteLinker_V1.0.html
