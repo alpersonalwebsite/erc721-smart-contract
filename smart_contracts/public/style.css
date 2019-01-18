@@ -1,25 +1,79 @@
-/*
-body {
-    background-color:#F0F0F0;
-    padding: 2em;
-    font-family: 'Raleway','Source Sans Pro', 'Arial';
-}
-.container {
-    width: 50%;
-    margin: 0 auto;
-}
-.bold {
-    font-weight: bolder;
-    width: 100px;
-    display: inline-block;
-}
-.row {
-    margin-bottom:10px;
-}
-button {
-    margin: 2em 0;
-    padding: 1em 4em;
-    display:block;
+body,
+html {
+  height: 100%;
+  margin: 0;
+  font: 400 15px/1.8 'Lato', sans-serif;
 }
 
-*/
+.screenBackground {
+  position: relative;
+  opacity: 1;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url('images/background3.jpeg');
+  height: 100%;
+}
+
+#screen {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  text-align: center;
+  color: #000;
+}
+
+.modal-background {
+  align-items: center;
+  display: flex;
+}
+
+h1,
+h2 {
+  color: #fff !important;
+  text-shadow: 1px 1px #000;
+}
+
+h2 {
+  margin-bottom: 15px !important;
+}
+
+article.media {
+  background: #fff;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+.image img {
+  min-height: 100%;
+}
+
+.bigImage {
+  border: 4px solid white;
+  margin: 0 auto;
+  display: block;
+  max-width: 80%;
+}
+
+#star-show .content > p {
+  margin-bottom: 5px;
+}
+#star-show .buttons .button,
+#star-show .content,
+#star-show .buttons:not(:last-child) {
+  margin-bottom: 0;
+}
+
+#star-show .button {
+  font-size: 10px;
+}
+
+.corrdinatesValidationWrap {
+  display: none;
+}
+
+/* Ext helper to show */
+.show {
+  display: block;
+}
