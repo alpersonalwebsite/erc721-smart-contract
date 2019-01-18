@@ -1,5 +1,22 @@
+/*
+* Constants
+*
+*/
+
 const modalWindow = document.querySelector('body > .modal');
 
+// The interface definition for your smart contract (the ABI) >> build/contracts/StarNotary.json > abi property
+const StarNotary = web3.eth.contract(ABI);
+// Grab the contract at specified deployed address with the >> interface defined by the ABI
+const starNotary = StarNotary.at('0xF7c71e77b4E0670019D4e4C89Be877428A25489d');
+
+const starImage = 'images/starIcon.png';
+const radar = 'images/radar.gif'; // For loading
+
+/*
+* Templates
+*
+*/
 // Modal template 1: no MetaMask
 const noMetamaskAcCtemplate =
   '<div class="modal-background"></div><div class="modal-card"> <header class="modal-card-head"> <p class="modal-card-title">Warning!</p> <button class="delete close" aria-label="close"></button> </header> <section class="modal-card-body"> Please, login into your MetaMask account. </section> <footer class="modal-card-foot"> <button class="button close">OK</button> </footer> </div>';
@@ -13,6 +30,63 @@ let showFullImage = function(imagePath) {
   );
 };
 
+let name, particularSection;
+
+let basicTemplateCard = (starImageClass, starImage, name, particularSection) =>
+  '<article class="media"><figure class="media-left"><p class="image is-64x64"><img src="' +
+  starImage +
+  '" class="' +
+  starImageClass +
+  '" ></p></figure><div class="media-content"><div class="content"><p><strong>' +
+  name +
+  '</strong>' +
+  particularSection +
+  '</p></div><div></article>';
+
+/*
+* Helpers
+*
+*/
+
+// We can expand it for multiple elements and multiple classes
+function addClassToElement(element, theClass) {
+  // We dont care about IE9
+  return element.classList.add(theClass);
+}
+
+function removeClassToElement(element, theClass) {
+  console.log(element, theClass);
+  element.classList.remove(theClass);
+}
+
+function openModal(element, theClass) {
+  addClassToElement(element, theClass);
+}
+
+function modalContent(type, imagePath) {
+  if (imagePath) {
+    document.querySelector('.modal').innerHTML = type(imagePath);
+    return;
+  }
+  document.querySelector('.modal').innerHTML = type;
+}
+
+function closeModal(element, theClass) {
+  removeClassToElement(element, theClass);
+}
+
+function modalEventsForClosing(element, theClass) {
+  document.querySelectorAll('.close').forEach(function(elem) {
+    elem.addEventListener('click', function() {
+      closeModal(element, theClass);
+    });
+  });
+}
+
+/*
+* Web3 init conf
+*
+*/
 if (typeof web3 !== 'undefined') {
   web3 = new Web3(web3.currentProvider);
 } else {
@@ -27,50 +101,16 @@ web3.eth.getAccounts(function(error, accounts) {
 });
 
 if (!web3.eth.defaultAccount) {
-  // We dont care about IE9
-  modalWindow.classList.add('is-active');
+  console.log('UHHHHHHHHHHHHHHHHHHHHHH');
+  openModal(modalWindow, 'is-active');
   modalContent(noMetamaskAcCtemplate);
-  eventsForClosing();
+  modalEventsForClosing(modalWindow, 'is-active');
 }
 
-function eventsForClosing() {
-  document.querySelectorAll('.close').forEach(function(elem) {
-    elem.addEventListener('click', closeModal);
-  });
-}
-
-function closeModal() {
-  modalWindow.classList.remove('is-active');
-}
-
-function modalContent(type, imagePath) {
-  if (imagePath) {
-    document.querySelector('.modal').innerHTML = type(imagePath);
-    return;
-  }
-  document.querySelector('.modal').innerHTML = type;
-}
-
-// The interface definition for your smart contract (the ABI) >> build/contracts/StarNotary.json > abi property
-const StarNotary = web3.eth.contract(ABI);
-// Grab the contract at specified deployed address with the >> interface defined by the ABI
-const starNotary = StarNotary.at('0xF7c71e77b4E0670019D4e4C89Be877428A25489d');
-
-const starImage = 'images/starIcon.png';
-const radar = 'images/radar.gif'; // For loading
-
-let name, particularSection;
-
-let basicTemplateCard = (starImageClass, starImage, name, particularSection) =>
-  '<article class="media"><figure class="media-left"><p class="image is-64x64"><img src="' +
-  starImage +
-  '" class="' +
-  starImageClass +
-  '" ></p></figure><div class="media-content"><div class="content"><p><strong>' +
-  name +
-  '</strong>' +
-  particularSection +
-  '</p></div><div></article>';
+/*
+* Methods
+*
+*/
 
 function claimButtonClicked() {
   name = document.querySelector('#star-name').value;
@@ -255,7 +295,7 @@ function checkStarByTx() {
             document.querySelector('.retrieve').onclick = function() {
               modalWindow.classList.add('is-active');
               modalContent(showFullImage, response.imagePath);
-              eventsForClosing();
+              modalEventsForClosing(modalWindow, 'is-active');
             };
           })
           //.then(response => console.log('Success:', JSON.stringify(response)))
