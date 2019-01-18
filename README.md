@@ -548,3 +548,7 @@ And excluding...
 * https://medium.com/coinmonks/the-many-ways-to-deploy-your-smart-contract-to-rinkeby-network-38cadf7b20be
 * https://medium.com/coinmonks/exploring-non-fungible-token-with-zeppelin-library-erc721-399cb180cfaf
 * https://github.com/trufflesuite/truffle-contract
+
+## Credits
+
+Background image: [Scenic View Of Rocky Mountain During Evening](https://www.pexels.com/photo/scenic-view-of-rocky-mountain-during-evening-1624438/) - By: Eberhard Grossgasteiger
