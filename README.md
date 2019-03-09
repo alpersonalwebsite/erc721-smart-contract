@@ -1,5 +1,7 @@
 # Decentralized Star Notary
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/alpersonalwebsite/erc721-smart-contract.svg)](https://greenkeeper.io/)
+
 # Objective
 
 Create and implement an [ERC-721](http://erc721.org/) smart contract with its proper UT and a basic UI to "Register" (Add) and "Retrieve" a "Digital Asset" (in this case, a Star) by its "Token ID".
