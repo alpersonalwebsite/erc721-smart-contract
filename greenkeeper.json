@@ -1,0 +1,9 @@
+{
+  "groups": {
+    "default": {
+      "packages": [
+        "smart_contracts/package.json"
+      ]
+    }
+  }
+}
