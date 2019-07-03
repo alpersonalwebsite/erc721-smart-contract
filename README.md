@@ -1,6 +1,7 @@
 # Decentralized Star Notary
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/alpersonalwebsite/erc721-smart-contract.svg)](https://greenkeeper.io/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
 # Objective
 
