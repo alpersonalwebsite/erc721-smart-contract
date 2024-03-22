@@ -15,7 +15,7 @@
     "node-server-screenshot": "^0.2.1",
     "openzeppelin-solidity": "^2.1.1",
     "serve-static": "^1.13.2",
-    "truffle-hdwallet-provider": "^1.0.2"
+    "truffle-hdwallet-provider": "^1.0.17"
   },
   "devDependencies": {
     "nodemon": "^1.18.9"
