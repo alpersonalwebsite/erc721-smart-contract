@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
-    "express": "^4.16.4",
+    "express": "^4.21.1",
     "node-server-screenshot": "^0.2.1",
     "openzeppelin-solidity": "^2.1.1",
     "serve-static": "^1.13.2",
