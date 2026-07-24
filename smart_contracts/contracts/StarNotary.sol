@@ -73,19 +73,17 @@ contract StarNotary is ERC721, ERC721Metadata  {
 		address starOwner = this.ownerOf(tokenId);
 		require(msg.value >= starCost);
 
+		// Effects before interactions (checks-effects-interactions): move the
+		// token and clear the sale mapping before paying anyone out.
 		_removeTokenFrom(starOwner, tokenId);
-
 		_addTokenTo(msg.sender, tokenId);
+		starsForSale[tokenId] = 0;
 
+		// Interactions: pay the seller, then refund any overpayment.
 		starOwner.transfer(starCost);
-
-		// If the value sent is more than the value of the star, we send the remaining back
 		if(msg.value > starCost) {
 			msg.sender.transfer(msg.value - starCost);
 		}
-
-		// And since it was sold, we remove it from the mapping
-		starsForSale[tokenId] = 0;
 	}
 
 	// https://medium.com/coinmonks/exploring-non-fungible-token-with-zeppelin-library-erc721-399cb180cfaf
