@@ -61,7 +61,7 @@ contract StarNotary is ERC721, ERC721Metadata  {
 	}
 
 	function putStarUpForSale(uint256 tokenId, uint256 price) public {
-		require(this.ownerOf(tokenId) == msg.sender, "You are not the owner of that Star!");
+		require(ownerOf(tokenId) == msg.sender, "You are not the owner of that Star!");
 		starsForSale[tokenId] = price;
 	}
 
@@ -70,7 +70,7 @@ contract StarNotary is ERC721, ERC721Metadata  {
 		require(starsForSale[tokenId] > 0);
 
 		uint256 starCost = starsForSale[tokenId];
-		address starOwner = this.ownerOf(tokenId);
+		address starOwner = ownerOf(tokenId);
 		require(msg.value >= starCost);
 
 		// Effects before interactions (checks-effects-interactions): move the
@@ -97,8 +97,8 @@ contract StarNotary is ERC721, ERC721Metadata  {
 
 	function exchangeStars(address user1, uint256 user1TokenId, address user2, uint256 user2TokenId) public {
 
-		require(this.ownerOf(user1TokenId) == user1);
-		require(this.ownerOf(user2TokenId) == user2);
+		require(ownerOf(user1TokenId) == user1);
+		require(ownerOf(user2TokenId) == user2);
 
 		_removeTokenFrom(user1, user1TokenId);
 		_addTokenTo(user2, user1TokenId);
