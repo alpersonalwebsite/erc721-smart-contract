@@ -88,8 +88,10 @@ contract StarNotary is ERC721, ERC721Metadata  {
 
 	// https://medium.com/coinmonks/exploring-non-fungible-token-with-zeppelin-library-erc721-399cb180cfaf
 	// NOTE (demo): intentionally unrestricted, so anyone can mint an arbitrary
-	// tokenId with no star data or uniqueness check. A production contract would
-	// restrict this (e.g. onlyOwner) and mint via createStar instead.
+	// tokenId with no star data, skipping createStar's coordinate-uniqueness
+	// check (ERC721 itself still rejects a tokenId that already exists). A
+	// production contract would restrict this (e.g. onlyOwner) and mint via
+	// createStar instead.
 	function mint(uint256 tokenId) public {
 		super._mint(msg.sender, tokenId);
 	}
