@@ -1,6 +1,5 @@
 # Decentralized Star Notary
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/alpersonalwebsite/erc721-smart-contract.svg)](https://greenkeeper.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
 # Objective
@@ -15,6 +14,12 @@ The contract should cover the following functionality:
 * Transaction: Selling and Buying
 * Transferring
 * Exchanging
+
+> Scope note: this is a learning demo. A couple of functions are intentionally
+> permissive — `mint` is unrestricted (anyone can mint an arbitrary token) and
+> `exchangeStars` can be called by any address (a documented "source of trust"
+> simplification). A production contract would add access control and require
+> both owners' approval.
 
 # Installation
 
