@@ -31,6 +31,16 @@ npm install
 
 _Note:_ [electron](https://github.com/electron) will be downloaded and installed.
 
+> **Build compatibility note:** the pinned compiler (`solc 0.4.24` in
+> `truffle-config.js` / `pragma ^0.4.24`) and the resolved
+> `openzeppelin-solidity` (2.x, which targets Solidity `^0.5.0`) are an
+> inconsistent pair, so the contract will **not compile as committed**. It was
+> written against roughly `solc 0.5.x` + OpenZeppelin `~2.0.0` (it uses
+> `_addTokenTo` / `_removeTokenFrom`, which OZ removed after 2.0). To build and
+> test it, use a `0.5.x` compiler with an OpenZeppelin `~2.0.x` release (or,
+> with a `0.4.x` compiler, OpenZeppelin 1.x). The versions are left frozen here
+> on purpose, so this is documented rather than changed.
+
 ## Deploying locally
 
 1. Install `truffle` and `ganache-cli` globally
