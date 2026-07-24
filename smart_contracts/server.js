@@ -47,7 +47,7 @@ app.post('/star', async function(req, res) {
         height: req.body.userInfo.windowHeight
       }
     },
-    await function() {
+    function() {
       // done!
       res.send({ imagePath });
     }
