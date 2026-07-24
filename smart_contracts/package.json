@@ -1,14 +1,14 @@
 {
   "name": "smart_contracts",
   "version": "1.0.0",
-  "description": "",
+  "description": "ERC-721 Star Notary smart contract (Truffle, OpenZeppelin) with a web UI",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
