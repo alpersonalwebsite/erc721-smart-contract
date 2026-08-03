@@ -61,7 +61,7 @@ contract StarNotary is ERC721, ERC721Metadata  {
 	}
 
 	function putStarUpForSale(uint256 tokenId, uint256 price) public {
-		require(this.ownerOf(tokenId) == msg.sender, "You are not the owner of that Star!");
+		require(ownerOf(tokenId) == msg.sender, "You are not the owner of that Star!");
 		starsForSale[tokenId] = price;
 	}
 
@@ -70,25 +70,28 @@ contract StarNotary is ERC721, ERC721Metadata  {
 		require(starsForSale[tokenId] > 0);
 
 		uint256 starCost = starsForSale[tokenId];
-		address starOwner = this.ownerOf(tokenId);
+		address starOwner = ownerOf(tokenId);
 		require(msg.value >= starCost);
 
+		// Effects before interactions (checks-effects-interactions): move the
+		// token and clear the sale mapping before paying anyone out.
 		_removeTokenFrom(starOwner, tokenId);
-
 		_addTokenTo(msg.sender, tokenId);
+		starsForSale[tokenId] = 0;
 
+		// Interactions: pay the seller, then refund any overpayment.
 		starOwner.transfer(starCost);
-
-		// If the value sent is more than the value of the star, we send the remaining back
 		if(msg.value > starCost) {
 			msg.sender.transfer(msg.value - starCost);
 		}
-
-		// And since it was sold, we remove it from the mapping
-		starsForSale[tokenId] = 0;
 	}
 
 	// https://medium.com/coinmonks/exploring-non-fungible-token-with-zeppelin-library-erc721-399cb180cfaf
+	// NOTE (demo): intentionally unrestricted, so anyone can mint an arbitrary
+	// tokenId with no star data, skipping createStar's coordinate-uniqueness
+	// check (ERC721 itself still rejects a tokenId that already exists). A
+	// production contract would restrict this (e.g. onlyOwner) and mint via
+	// createStar instead.
 	function mint(uint256 tokenId) public {
 		super._mint(msg.sender, tokenId);
 	}
@@ -97,10 +100,14 @@ contract StarNotary is ERC721, ERC721Metadata  {
 		safeTransferFrom(starOwner, to, tokenId);
 	}
 
+	// NOTE (demo): any caller can trigger this swap as long as the ownership
+	// args match; msg.sender need not be one of the parties. This is an
+	// intentional "source of trust" simplification (see README) - a production
+	// version would require authorization/approval from both owners.
 	function exchangeStars(address user1, uint256 user1TokenId, address user2, uint256 user2TokenId) public {
 
-		require(this.ownerOf(user1TokenId) == user1);
-		require(this.ownerOf(user2TokenId) == user2);
+		require(ownerOf(user1TokenId) == user1);
+		require(ownerOf(user2TokenId) == user2);
 
 		_removeTokenFrom(user1, user1TokenId);
 		_addTokenTo(user2, user1TokenId);
